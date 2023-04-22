@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 
+using Humanizer;
+
 namespace Paddi.DemoUsages.Core;
 
 public abstract class RunnerBase : IRunnableService
@@ -12,8 +14,31 @@ public abstract class RunnerBase : IRunnableService
         LogInternal(msg, callerMemberName, lineNumber);
     }
 
+    protected void Log(string msg, [CallerMemberName] string callerMemberName = "", [CallerLineNumber] int lineNumber = 0, params object[] args)
+    {
+        if (args.Length == 0)
+        {
+            LogInternal(msg, callerMemberName, lineNumber);
+        }
+        else
+        {
+            LogInternal(msg, callerMemberName, lineNumber, args);
+        }
+    }
+
+    protected static object[] Args(params object[] args) => args;
+
     private void LogInternal(string msg, string callerMemberName, int lineNumber)
     {
+        var message = $"""
+            {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} | INFO | Thread-{Environment.CurrentManagedThreadId} | {RunnerInfo.Name}-{callerMemberName}:line {lineNumber} | {msg}
+            """;
+        Console.WriteLine(message);
+    }
+
+    private void LogInternal(string msg, string callerMemberName, int lineNumber, object[] args)
+    {
+        msg = msg.FormatWith(args);
         var message = $"""
             {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} | INFO | Thread-{Environment.CurrentManagedThreadId} | {RunnerInfo.Name}-{callerMemberName}:line {lineNumber} | {msg}
             """;
