@@ -5,7 +5,7 @@ public class PeriodicTimerRunner : RunnerBase
 {
     protected override async Task RunInternalAsync(CancellationToken token = default)
     {
-        var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+        var timer = new PeriodicTimer(TimeSpan.FromMicroseconds(100));
         var cnt = 0;
         while (await timer.WaitForNextTickAsync(token))
         {
