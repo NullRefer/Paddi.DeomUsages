@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-using Refit;
+﻿using Refit;
 
 namespace Paddi.DemoUsages.ConsoleDemo.RunnableServices.RefitRunner;
 

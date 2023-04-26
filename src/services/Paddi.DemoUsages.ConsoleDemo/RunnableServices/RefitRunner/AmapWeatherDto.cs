@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace Paddi.DemoUsages.ConsoleDemo.RunnableServices.RefitRunner;
+﻿namespace Paddi.DemoUsages.ConsoleDemo.RunnableServices.RefitRunner;
 
 public class AmapWeatherResultDto
 {
