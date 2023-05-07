@@ -5,6 +5,7 @@ namespace Paddi.DemoUsages.ConsoleDemo.RunnableServices.RefitRunner;
 [Runner("Refit service", "Use refit to simplify Http request", "https://github.com/reactiveui/refit")]
 public class RefitRunner : RunnerBase
 {
+    public override bool Skip => true;
     private const string AmapApiKey = "a7707676285cf6287b3f8849ffc5caff";
 
     protected override async Task RunInternalAsync(CancellationToken token = default)

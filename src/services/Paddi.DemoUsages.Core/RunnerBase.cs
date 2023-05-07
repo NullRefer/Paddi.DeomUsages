@@ -7,6 +7,8 @@ namespace Paddi.DemoUsages.Core;
 
 public abstract class RunnerBase : IRunnableService
 {
+    public virtual bool Skip => false;
+
     private RunnerAttribute RunnerInfo => GetType().GetCustomAttribute<RunnerAttribute>()!;
 
     protected void Log(string msg, [CallerMemberName] string callerMemberName = "", [CallerLineNumber] int lineNumber = 0)
