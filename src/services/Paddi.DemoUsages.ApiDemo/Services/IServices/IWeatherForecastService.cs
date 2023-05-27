@@ -1,6 +1,4 @@
-﻿using Paddi.DemoUsages.ApiDemo.Dtos;
-
-namespace Paddi.DemoUsages.ApiDemo.Services.IServices;
+﻿namespace Paddi.DemoUsages.ApiDemo.Services.IServices;
 
 public interface IWeatherForecastService : IAppService
 {

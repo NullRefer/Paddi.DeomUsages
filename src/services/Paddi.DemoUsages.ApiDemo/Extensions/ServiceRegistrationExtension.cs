@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
 
-using Paddi.DemoUsages.ApiDemo.Services.IServices;
-
 namespace Paddi.DemoUsages.ApiDemo.Extensions;
 
 public static class ServiceRegistrationExtension

@@ -1,7 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 
-using Newtonsoft.Json;
-
 namespace Paddi.DemoUsages.ApiDemo.Dtos;
 
 public class ResultDto

@@ -1,14 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
-
-using Paddi.DemoUsages.ApiDemo.Dtos;
-using Paddi.DemoUsages.ApiDemo.Filters;
-using Paddi.DemoUsages.ApiDemo.Services.IServices;
-
 namespace Paddi.DemoUsages.ApiDemo.Controllers;
 
 [ApiController]
-[EnableRateLimiting("FixedWindow")]
+// [EnableRateLimiting("FixedWindow")]
 [Route("weather-forecasts")]
 public class WeatherForecastController : ControllerBase
 {

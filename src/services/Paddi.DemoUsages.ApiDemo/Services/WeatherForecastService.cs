@@ -1,12 +1,4 @@
-﻿using System.Linq.Expressions;
-
-using Bogus;
-
-using Paddi.DemoUsages.ApiDemo.Dtos;
-using Paddi.DemoUsages.ApiDemo.Extensions;
-using Paddi.DemoUsages.ApiDemo.Services.IServices;
-
-namespace Paddi.DemoUsages.ApiDemo.Services;
+﻿namespace Paddi.DemoUsages.ApiDemo.Services;
 
 public class WeatherForecastService : IWeatherForecastService
 {

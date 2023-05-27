@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.RateLimiting;
-
-using Paddi.DemoUsages.ApiDemo.Extensions;
 using Paddi.DemoUsages.ApiDemo.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
