@@ -9,7 +9,7 @@ namespace Paddi.DemoUsages.ApiDemo.Controllers;
 
 [ApiController]
 [EnableRateLimiting("FixedWindow")]
-[Route("weather-foreasts")]
+[Route("weather-forecasts")]
 public class WeatherForecastController : ControllerBase
 {
     private readonly IWeatherForecastService _service;
