@@ -2,7 +2,7 @@
 
 namespace Paddi.DemoUsages.ApiDemo.Services.IServices;
 
-public interface IWeatherForecastService
+public interface IWeatherForecastService : IAppService
 {
     Task<IEnumerable<WeatherForecast>> PageAsync(WeatherForecastSearchDto search, CancellationToken token = default);
     Task<IEnumerable<WeatherForecast>> GetAllAsync(CancellationToken token = default);
