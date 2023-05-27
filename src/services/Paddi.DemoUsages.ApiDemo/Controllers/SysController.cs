@@ -17,4 +17,7 @@ public class SysController : ControllerBase
         var db = redisDbProvider.GetDatabase();
         return this.Result((string?)await db.StringGetAsync(key) ?? "");
     }
+
+    [HttpGet("config")]
+    public ResultDto<string> GetConfiguration(string key, [FromServices] IConfiguration configuration) => this.Result(configuration[key] ?? "");
 }
