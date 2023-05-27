@@ -1,32 +1,36 @@
 using Microsoft.AspNetCore.Mvc;
 
+using Paddi.DemoUsages.ApiDemo.Dtos;
+using Paddi.DemoUsages.ApiDemo.Services.IServices;
+
 namespace Paddi.DemoUsages.ApiDemo.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("weather-foreasts")]
 public class WeatherForecastController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
     private readonly ILogger<WeatherForecastController> _logger;
+    private readonly IWeatherForecastService _service;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, IWeatherForecastService service)
     {
         _logger = logger;
+        _service = service;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get()
+    [HttpGet]
+    public async Task<ActionResult<ResultDto<IEnumerable<WeatherForecast>>>> GetAllAsync()
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
+        var result = Result(await _service.GetAllAsync());
+        return result;
     }
+
+    [HttpGet("sunny-today")]
+    public async Task<ResultDto<bool>> TodayIsSunnyAsync()
+    {
+        var result = Result(await _service.IsTodaySunnyAsync());
+        return result;
+    }
+
+    public ResultDto<T> Result<T>(T result) => new(result);
 }

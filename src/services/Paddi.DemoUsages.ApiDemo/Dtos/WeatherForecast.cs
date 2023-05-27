@@ -1,8 +1,10 @@
-namespace Paddi.DemoUsages.ApiDemo;
+namespace Paddi.DemoUsages.ApiDemo.Dtos;
 
 public class WeatherForecast
 {
-    public DateOnly Date { get; set; }
+    public long Id { get; set; }
+
+    public DateTime Date { get; set; }
 
     public int TemperatureC { get; set; }
 
