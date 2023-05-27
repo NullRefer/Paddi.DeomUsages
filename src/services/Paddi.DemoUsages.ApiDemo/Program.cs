@@ -15,7 +15,7 @@ builder.Services.AddRateLimiter(o => o.AddFixedWindowLimiter("FixedWindow", c =>
     c.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.NewestFirst;
     c.QueueLimit = 2;
 }));
-builder.Services.AddPaddiServices();
+builder.Services.AddPaddiServices(builder.Configuration);
 
 var app = builder.Build();
 
