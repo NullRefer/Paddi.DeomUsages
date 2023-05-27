@@ -1,5 +1,8 @@
+using System.Diagnostics;
+
 namespace Paddi.DemoUsages.ApiDemo.Dtos;
 
+[DebuggerDisplay("Id: {Id}, Temp: {TemperatureC}")]
 public class WeatherForecast
 {
     public long Id { get; set; }
@@ -10,5 +13,5 @@ public class WeatherForecast
 
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 
-    public string? Summary { get; set; }
+    public string Summary { get; set; } = "";
 }

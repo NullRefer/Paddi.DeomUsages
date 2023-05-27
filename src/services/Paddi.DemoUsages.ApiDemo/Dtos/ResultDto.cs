@@ -1,5 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
+using Newtonsoft.Json;
+
 namespace Paddi.DemoUsages.ApiDemo.Dtos;
 
 public class ResultDto
@@ -19,5 +21,6 @@ public class ResultDto<T> : ResultDto
     }
 
     [JsonPropertyOrder(4)]
+    [JsonProperty(Order = 4)]
     public T Data { get; set; }
 }
