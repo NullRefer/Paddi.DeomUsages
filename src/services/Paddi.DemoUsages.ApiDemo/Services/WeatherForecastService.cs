@@ -40,7 +40,7 @@ public class WeatherForecastService : IWeatherForecastService
         };
 
         var faker = new Faker<WeatherForecast>();
-        faker.RuleFor(e => e.Id, (f, p) => f.IndexGlobal)
+        faker.RuleFor(e => e.Id, (f, p) => f.IndexFaker)
              .RuleFor(e => e.Date, (f, p) => f.Date.Past(3))
              .RuleFor(e => e.TemperatureC, (f, p) => f.Random.Int(20, 35))
              .RuleFor(e => e.Summary, (f, p) => f.PickRandom(summaries));
