@@ -39,11 +39,12 @@ public class WeatherForecastService : IWeatherForecastService
             "Sunny Day", "Rainy Day", "Cloudy Day"
         };
 
-        var faker = new Faker<WeatherForecast>();
-        faker.RuleFor(e => e.Id, (f, p) => f.IndexFaker)
-             .RuleFor(e => e.Date, (f, p) => f.Date.Past(3))
-             .RuleFor(e => e.TemperatureC, (f, p) => f.Random.Int(20, 35))
-             .RuleFor(e => e.Summary, (f, p) => f.PickRandom(summaries));
+        var faker = new Faker<WeatherForecast>()
+            .UseSeed(1000)
+            .RuleFor(e => e.Id, f => f.IndexFaker)
+            .RuleFor(e => e.Date, f => f.Date.Past(3))
+            .RuleFor(e => e.TemperatureC, f => f.Random.Int(0, 45))
+            .RuleFor(e => e.Summary, f => f.PickRandom(summaries));
 
         return Task.FromResult(faker.Generate(count).AsEnumerable());
     }

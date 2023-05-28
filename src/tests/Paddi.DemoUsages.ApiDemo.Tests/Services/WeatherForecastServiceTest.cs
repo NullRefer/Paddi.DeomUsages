@@ -29,5 +29,5 @@ public class WeatherForecastServiceTest
         result.Should().NotBeNull();
     }
 
-    private WeatherForecastService GetSut() => new();
+    private static WeatherForecastService GetSut() => new();
 }
