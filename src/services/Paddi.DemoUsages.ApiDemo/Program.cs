@@ -1,3 +1,4 @@
+using Paddi.DemoUsages.ApiDemo.Hubs;
 using Paddi.DemoUsages.ApiDemo.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +16,10 @@ builder.Services.AddRateLimiter(o => o.AddFixedWindowLimiter("FixedWindow", c =>
     c.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.NewestFirst;
     c.QueueLimit = 2;
 }));
-builder.Services.AddPaddiServices(builder.Configuration);
+builder.Services.AddMemoryCache();
+builder.Services.AddSignalR();
+builder.Services.AddPaddiServices(builder.Configuration)
+                .AddPaddiHostedServices();
 
 var app = builder.Build();
 
@@ -36,6 +40,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/ChatHub");
 
 //app.UseRateLimiter();
 

@@ -28,4 +28,17 @@ public static class ServiceRegistrationExtension
 
         return services;
     }
+
+    public static IServiceCollection AddPaddiHostedServices(this IServiceCollection services)
+    {
+        var ns = "Paddi.DemoUsages.ApiDemo.HostedServices";
+        var types = Assembly.GetExecutingAssembly()
+                            .ExportedTypes
+                            .Where(type => type.Namespace == ns && !type.IsAbstract && type.IsAssignableTo(typeof(BackgroundService)));
+        foreach (var type in types)
+        {
+            services.AddSingleton(typeof(IHostedService), type);
+        }
+        return services;
+    }
 }
