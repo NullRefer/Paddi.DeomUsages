@@ -11,11 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paddi.DemoUsages.ApiDemo", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paddi.DemoUsages.ConsoleDemo", "src\services\Paddi.DemoUsages.ConsoleDemo\Paddi.DemoUsages.ConsoleDemo.csproj", "{0277B03E-EF49-4350-A59A-29F94693082F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paddi.DemoUsages.Core", "src\services\Paddi.DemoUsages.Core\Paddi.DemoUsages.Core.csproj", "{86C8A20F-59E2-48FE-B386-9E39F6C7BEF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paddi.DemoUsages.Core", "src\services\Paddi.DemoUsages.Core\Paddi.DemoUsages.Core.csproj", "{86C8A20F-59E2-48FE-B386-9E39F6C7BEF8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2DF0594E-7530-43BB-8FAA-17A955BCBDCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paddi.DemoUsages.ApiDemo.Tests", "src\tests\Paddi.DemoUsages.ApiDemo.Tests\Paddi.DemoUsages.ApiDemo.Tests.csproj", "{2CD63E7F-7945-40B7-AA86-20019918F57D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paddi.DemoUsages.ApiDemo.Tests", "src\tests\Paddi.DemoUsages.ApiDemo.Tests\Paddi.DemoUsages.ApiDemo.Tests.csproj", "{2CD63E7F-7945-40B7-AA86-20019918F57D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paddi.DemoUsages.WpfDemo", "src\services\Paddi.DemoUsages.WpfDemo\Paddi.DemoUsages.WpfDemo.csproj", "{B46BCE97-839D-469F-A97B-AB0EA4596407}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{2CD63E7F-7945-40B7-AA86-20019918F57D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CD63E7F-7945-40B7-AA86-20019918F57D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CD63E7F-7945-40B7-AA86-20019918F57D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B46BCE97-839D-469F-A97B-AB0EA4596407}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B46BCE97-839D-469F-A97B-AB0EA4596407}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B46BCE97-839D-469F-A97B-AB0EA4596407}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B46BCE97-839D-469F-A97B-AB0EA4596407}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +56,7 @@ Global
 		{86C8A20F-59E2-48FE-B386-9E39F6C7BEF8} = {BE56ADBB-E166-4879-8867-5D2926411213}
 		{2DF0594E-7530-43BB-8FAA-17A955BCBDCE} = {379D848E-2BDC-44E5-BA16-E33D0284F87D}
 		{2CD63E7F-7945-40B7-AA86-20019918F57D} = {2DF0594E-7530-43BB-8FAA-17A955BCBDCE}
+		{B46BCE97-839D-469F-A97B-AB0EA4596407} = {BE56ADBB-E166-4879-8867-5D2926411213}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4770178-E650-4B4D-B9CE-F6F1EE0FB642}
