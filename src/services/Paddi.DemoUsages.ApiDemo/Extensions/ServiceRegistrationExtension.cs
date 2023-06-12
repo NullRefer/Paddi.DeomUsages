@@ -1,12 +1,14 @@
 ﻿using System.Reflection;
 
+using Microsoft.EntityFrameworkCore;
+
 using Paddi.DemoUsages.ApiDemo.Cache;
 
 namespace Paddi.DemoUsages.ApiDemo.Extensions;
 
 public static class ServiceRegistrationExtension
 {
-    public static IServiceCollection AddPaddiServices(this IServiceCollection services, ConfigurationManager configuration)
+    public static IServiceCollection AddPaddiAppServices(this IServiceCollection services, ConfigurationManager configuration)
     {
         // register scoped services
         var assembly = Assembly.GetExecutingAssembly();
@@ -22,10 +24,6 @@ public static class ServiceRegistrationExtension
             }
         }
 
-        // register cache provider
-        services.Configure<RedisOption>(configuration.GetSection("Redis"));
-        services.AddSingleton<IRedisDbProvider, RedisDbProvider>();
-
         return services;
     }
 
@@ -39,6 +37,29 @@ public static class ServiceRegistrationExtension
         {
             services.AddSingleton(typeof(IHostedService), type);
         }
+        return services;
+    }
+
+    public static IServiceCollection AddPaddiRedis(this IServiceCollection services, ConfigurationManager configuration)
+    {
+        // register cache provider
+        services.Configure<RedisOption>(configuration.GetSection("Redis"));
+        services.AddSingleton<IRedisDbProvider, RedisDbProvider>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddPaddiDbContext(this IServiceCollection services, ConfigurationManager configuration)
+    {
+        var mysqlConfig = configuration.GetSection("Mysql").Get<MysqlOption>()!;
+
+        services.AddDbContext<ApiDemoDbContext>(options =>
+        {
+            options.UseMySql(mysqlConfig.ConnectionString, new MySqlServerVersion(new Version(8, 0, 0)))
+                   .EnableDetailedErrors()
+                   .EnableSensitiveDataLogging()
+                   .EnableThreadSafetyChecks();
+        });
         return services;
     }
 }

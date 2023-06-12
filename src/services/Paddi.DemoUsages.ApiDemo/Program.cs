@@ -1,3 +1,7 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
+
+using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
 using Paddi.DemoUsages.ApiDemo.Hubs;
 using Paddi.DemoUsages.ApiDemo.Middlewares;
 
@@ -16,10 +20,15 @@ builder.Services.AddRateLimiter(o => o.AddFixedWindowLimiter("FixedWindow", c =>
     c.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.NewestFirst;
     c.QueueLimit = 2;
 }));
+
 builder.Services.AddMemoryCache();
 builder.Services.AddSignalR();
-builder.Services.AddPaddiServices(builder.Configuration)
-                .AddPaddiHostedServices();
+builder.Services.AddFluentValidationAutoValidation().AddValidatorsFromAssemblyContaining<DictDtoValidator>();
+
+builder.Services.AddPaddiAppServices(builder.Configuration)
+                .AddPaddiHostedServices()
+                .AddPaddiRedis(builder.Configuration)
+                .AddPaddiDbContext(builder.Configuration);
 
 var app = builder.Build();
 
