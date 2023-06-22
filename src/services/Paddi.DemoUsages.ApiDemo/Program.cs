@@ -13,13 +13,6 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddRateLimiter(o => o.AddFixedWindowLimiter("FixedWindow", c =>
-{
-    c.PermitLimit = 5;
-    c.Window = TimeSpan.FromSeconds(5);
-    c.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.NewestFirst;
-    c.QueueLimit = 2;
-}));
 
 builder.Services.AddMemoryCache();
 builder.Services.AddSignalR();
@@ -32,8 +25,9 @@ builder.Services.AddPaddiAppServices(builder.Configuration)
 
 var app = builder.Build();
 
+app.SetupEnv();
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker-compose"))
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -50,7 +44,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<ChatHub>("/ChatHub");
-
-//app.UseRateLimiter();
 
 app.Run();

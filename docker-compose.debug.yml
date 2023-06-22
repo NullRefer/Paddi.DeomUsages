@@ -1,0 +1,29 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+version: '3.4'
+
+services:
+  paddidemousagesapidemo:
+    image: paddidemousagesapidemo
+    build:
+      context: .
+      dockerfile: src/services/Paddi.DemoUsages.ApiDemo/Dockerfile
+    ports:
+      - 5580:80
+    depends_on:
+      - redis
+      - mysql
+    environment:
+      - ASPNETCORE_ENVIRONMENT=docker-compose
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+
+  redis:
+    image: redis
+  
+  mysql:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "12349876"
+      MYSQL_DATABASE: "paddi_demo"

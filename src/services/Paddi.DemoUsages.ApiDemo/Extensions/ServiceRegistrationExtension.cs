@@ -62,4 +62,20 @@ public static class ServiceRegistrationExtension
         });
         return services;
     }
+
+    public static WebApplication SetupEnv(this WebApplication app)
+    {
+        return app.InitDatabase();
+    }
+
+    public static WebApplication InitDatabase(this WebApplication app)
+    {
+        if (app.Environment.IsEnvironment("docker-compose"))
+        {
+            var dbContext = app.Services.GetRequiredService<ApiDemoDbContext>();
+            dbContext.Database.Migrate();
+        }
+
+        return app;
+    }
 }

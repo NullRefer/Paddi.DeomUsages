@@ -26,7 +26,7 @@ public class DictController : ControllerBase
     }
 
     [HttpPut("{id:long}")]
-    public async Task<ActionResult<ResultDto<Dict>>> UpdateAsync([FromRoute] long id, [FromBody] DictDto input)
+    public async Task<ActionResult<ResultDto<Dict?>>> UpdateAsync([FromRoute] long id, [FromBody] DictDto input)
     {
         var result = await _service.UpdateAsync(id, input);
 
@@ -34,7 +34,7 @@ public class DictController : ControllerBase
     }
 
     [HttpGet("{id:long}")]
-    public async Task<ActionResult<ResultDto<Dict>>> GetAsync([FromRoute] long id)
+    public async Task<ActionResult<ResultDto<Dict?>>> GetAsync([FromRoute] long id)
     {
         return this.Result(await _service.GetAsync(id));
     }
