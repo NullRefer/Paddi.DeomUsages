@@ -1,14 +1,18 @@
-﻿using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
+﻿using Microsoft.EntityFrameworkCore;
+
+using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
 
 namespace Paddi.DemoUsages.ApiDemo.Services;
 
 public class DictService : IDictService
 {
     private readonly ApiDemoDbContext _dbContext;
+    private readonly ILogger<DictService> _logger;
 
-    public DictService(ApiDemoDbContext dbContext)
+    public DictService(ApiDemoDbContext dbContext, ILogger<DictService> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
 
     public async Task<Dict> CreateAsync(DictDto input)
@@ -20,6 +24,7 @@ public class DictService : IDictService
         };
         await _dbContext.AddAsync(dict);
         await _dbContext.SaveChangesAsync();
+        _logger.LogInformation("Insert dict - {@Entity}", dict);
         return dict;
     }
 
@@ -28,6 +33,8 @@ public class DictService : IDictService
         var dict = await _dbContext.Set<Dict>().FindAsync(id);
         return dict == null ? -1 : await _dbContext.SoftDeleteAsync(dict);
     }
+
+    public async Task<long> BatchDeleteAsync(List<long> idList) => await _dbContext.Set<Dict>().Where(e => idList.Contains(e.Id)).ExecuteUpdateAsync(e => e.SetProperty(e => e.IsDeleted, true));
 
     public async Task<Dict?> GetAsync(long id) => await _dbContext.Set<Dict>().FindAsync(id);
 
@@ -39,6 +46,7 @@ public class DictService : IDictService
         dict.Key = input.Key;
         dict.Value = input.Value;
         await _dbContext.SaveChangesAsync();
+        _logger.LogInformation("Update dict - {@Entity}", dict);
         return dict;
     }
 }

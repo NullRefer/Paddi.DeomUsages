@@ -16,7 +16,23 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddMemoryCache();
 builder.Services.AddSignalR();
-builder.Services.AddFluentValidationAutoValidation().AddValidatorsFromAssemblyContaining<DictDtoValidator>();
+builder.Services.AddFluentValidationAutoValidation().AddValidatorsFromAssemblyContaining<DictDtoValidator>().Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = string.Join(',', context.ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+        return new JsonResult(new
+        {
+            Code = 9997,
+            Msg = errors,
+            Success = false,
+            Data = ""
+        })
+        {
+            StatusCode = StatusCodes.Status200OK
+        };
+    };
+});
 
 builder.Services.AddPaddiAppServices(builder.Configuration)
                 .AddPaddiHostedServices()

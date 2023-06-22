@@ -25,6 +25,13 @@ public class DictController : ControllerBase
         return this.Result(result);
     }
 
+    [HttpDelete("batch")]
+    public async Task<ActionResult<ResultDto<long>>> BatchDeleteAsync([FromBody] List<long> idList)
+    {
+        var result = await _service.BatchDeleteAsync(idList);
+        return this.Result(result);
+    }
+
     [HttpPut("{id:long}")]
     public async Task<ActionResult<ResultDto<Dict?>>> UpdateAsync([FromRoute] long id, [FromBody] DictDto input)
     {

@@ -8,6 +8,8 @@ public interface IDictService : IAppService
 
     Task<Dict?> UpdateAsync(long id, DictDto input);
 
+    Task<long> BatchDeleteAsync(List<long> idList);
+
     Task<Dict?> GetAsync(long id);
 
     Task<long> DeleteAsync(long id);
