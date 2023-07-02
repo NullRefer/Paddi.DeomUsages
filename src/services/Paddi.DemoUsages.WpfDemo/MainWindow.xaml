@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Paddi.DemoUsages.WpfDemo"
+        xmlns:vm="clr-namespace:Paddi.DemoUsages.WpfDemo.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
@@ -17,9 +18,24 @@
             <ColumnDefinition Width="4*" />
         </Grid.ColumnDefinitions>
 
+        <StackPanel>
+            <TextBlock Text="当前时间" TextAlignment="Center"/>
+            <TextBlock Text="{Binding CurrentDateTime}" FontSize="15"/>
+        </StackPanel>
         <TextBlock Grid.ColumnSpan="2" 
                    Text="ChatHub" FontSize="30"
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        <ItemsControl Grid.Row="1" />
+
+        <TextBlock Text="{Binding WorldMessage}"
+                   Grid.Row="1" Grid.Column="1"/>
+
+        <TextBox Text="{Binding MsgToSend,UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1">
+            <TextBox.InputBindings>
+                <KeyBinding Key="Enter" Command="{Binding SendWorldMessageCommand}"/>
+            </TextBox.InputBindings>
+        </TextBox>
 
     </Grid>
 </Window>

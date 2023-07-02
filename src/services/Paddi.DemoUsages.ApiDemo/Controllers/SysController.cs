@@ -18,6 +18,13 @@ public class SysController : ControllerBase
         return this.Result((string?)await db.StringGetAsync(key) ?? "");
     }
 
+    [HttpPost("cache")]
+    public async Task<ResultDto<bool>> SetCacheValueAsync(string key, string value, [FromServices] IRedisDbProvider redisDbProvider)
+    {
+        var db = redisDbProvider.GetDatabase();
+        return this.Result(await db.StringSetAsync(key, value));
+    }
+
     [HttpGet("config")]
     public ResultDto<string> GetConfiguration(string key, [FromServices] IConfiguration configuration) => this.Result(configuration[key] ?? "");
 }

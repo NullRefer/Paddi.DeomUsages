@@ -34,9 +34,9 @@ public class MessagePushJob : BackgroundService
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken) => Task.WhenAll(
-            StartChannelAsync(ServerTimeChannel, PushServerTime, stoppingToken),
-            StartChannelAsync(WorldMessageChannel, PushWorldMessage, stoppingToken),
-            StartChannelAsync(GroupMessageChannel, PushGroupMessage, stoppingToken));
+            StartChannelAsync(ServerTimeChannel, PushServerTime, TimeSpan.FromMilliseconds(333), stoppingToken),
+            StartChannelAsync(WorldMessageChannel, PushWorldMessage, TimeSpan.FromSeconds(3), stoppingToken),
+            StartChannelAsync(GroupMessageChannel, PushGroupMessage, TimeSpan.FromSeconds(3), stoppingToken));
 
     private Task PushServerTime(IServiceScope scope, CancellationToken token = default)
     {
@@ -69,7 +69,7 @@ public class MessagePushJob : BackgroundService
         }
     }
 
-    private async Task StartChannelAsync(string channelName, Func<IServiceScope, CancellationToken, Task> invocation, CancellationToken token = default)
+    private async Task StartChannelAsync(string channelName, Func<IServiceScope, CancellationToken, Task> invocation, TimeSpan interval, CancellationToken token = default)
     {
         while (true)
         {
@@ -86,7 +86,7 @@ public class MessagePushJob : BackgroundService
             }
             finally
             {
-                await Task.Delay(TimeSpan.FromSeconds(3), token);
+                await Task.Delay(interval, token);
             }
         }
     }
