@@ -20,7 +20,7 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
 
-        
+
         return services.BuildServiceProvider();
     }
 
