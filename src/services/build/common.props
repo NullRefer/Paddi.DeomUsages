@@ -1,0 +1,17 @@
+﻿<Project>
+	<Import Project="version.props" />
+	<PropertyGroup>
+		<EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
+		<Authors>Paddi</Authors>
+		<Product>DemoUsages</Product>
+		<PackagePrefix>Paddi</PackagePrefix>
+		<PackageIcon></PackageIcon>
+		<RepositoryUrl></RepositoryUrl>
+		<PackageProjectUrl></PackageProjectUrl>
+		<RepositoryType>github</RepositoryType>
+		<SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
+		<SatelliteResourceLanguages>zh-Hant</SatelliteResourceLanguages>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<NoWarn>$(NoWarn);NU1803;</NoWarn>
+	</PropertyGroup>
+</Project>
