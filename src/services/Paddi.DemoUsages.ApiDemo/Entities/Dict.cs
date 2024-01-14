@@ -21,6 +21,8 @@ public class Dict : ISoftDeleteEntity
 
     [Column("is_deleted")]
     public bool IsDeleted { get; set; }
+
+    public override string ToString() => $"Id: {Id}, key: {Key}, value: {Value}";
 }
 
 public class DictConfig : IEntityTypeConfiguration<Dict>

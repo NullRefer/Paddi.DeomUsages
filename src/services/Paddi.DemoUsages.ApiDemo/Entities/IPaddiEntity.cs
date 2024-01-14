@@ -8,4 +8,3 @@ public interface ISoftDeleteEntity : IPaddiEntity
 {
     bool IsDeleted { get; set; }
 }
-

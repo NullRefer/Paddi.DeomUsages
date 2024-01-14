@@ -1,6 +1,9 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 
+using Hangfire;
+using Hangfire.Redis.StackExchange;
+
 using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
 using Paddi.DemoUsages.ApiDemo.Hubs;
 using Paddi.DemoUsages.ApiDemo.Middlewares;
@@ -33,15 +36,19 @@ builder.Services.AddFluentValidationAutoValidation().AddValidatorsFromAssemblyCo
         };
     };
 });
+builder.Services.AddHangfireServer()
+                .AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                                                           .UseSimpleAssemblyNameTypeSerializer()
+                                                           .UseRecommendedSerializerSettings()
+                                                           .UseRedisStorage("localhost:16379"));
 
-builder.Services.AddPaddiAppServices(builder.Configuration)
+builder.Services.AddPaddiAppServices()
                 .AddPaddiHostedServices()
                 .AddPaddiRedis(builder.Configuration)
                 .AddPaddiDbContext(builder.Configuration);
 
 var app = builder.Build();
 
-app.SetupEnv();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker-compose"))
 {
@@ -52,9 +59,11 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker-com
 
 app.UseHttpLogging();
 
-app.UseApiDelayMiddleware();
+//app.UseApiDelayMiddleware();
 
 app.UseHttpsRedirection();
+
+app.UseHangfireDashboard();
 
 app.UseAuthorization();
 

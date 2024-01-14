@@ -3,12 +3,13 @@
 using Microsoft.EntityFrameworkCore;
 
 using Paddi.DemoUsages.ApiDemo.Cache;
+using Paddi.DemoUsages.ApiDemo.Entities;
 
 namespace Paddi.DemoUsages.ApiDemo.Extensions;
 
 public static class ServiceRegistrationExtension
 {
-    public static IServiceCollection AddPaddiAppServices(this IServiceCollection services, ConfigurationManager configuration)
+    public static IServiceCollection AddPaddiAppServices(this IServiceCollection services)
     {
         // register scoped services
         var assembly = Assembly.GetExecutingAssembly();
@@ -29,10 +30,9 @@ public static class ServiceRegistrationExtension
 
     public static IServiceCollection AddPaddiHostedServices(this IServiceCollection services)
     {
-        var ns = "Paddi.DemoUsages.ApiDemo.HostedServices";
         var types = Assembly.GetExecutingAssembly()
                             .ExportedTypes
-                            .Where(type => type.Namespace == ns && !type.IsAbstract && type.IsAssignableTo(typeof(BackgroundService)));
+                            .Where(type => !type.IsAbstract && type.IsAssignableTo(typeof(BackgroundService)));
         foreach (var type in types)
         {
             services.AddSingleton(typeof(IHostedService), type);
@@ -60,22 +60,8 @@ public static class ServiceRegistrationExtension
                    .EnableSensitiveDataLogging()
                    .EnableThreadSafetyChecks();
         });
+
+        services.AddScoped<IRepository<Dict>, Repository<Dict>>();
         return services;
-    }
-
-    public static WebApplication SetupEnv(this WebApplication app)
-    {
-        return app.InitDatabase();
-    }
-
-    public static WebApplication InitDatabase(this WebApplication app)
-    {
-        if (app.Environment.IsEnvironment("docker-compose"))
-        {
-            var dbContext = app.Services.GetRequiredService<ApiDemoDbContext>();
-            dbContext.Database.Migrate();
-        }
-
-        return app;
     }
 }
