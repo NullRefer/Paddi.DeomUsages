@@ -6,18 +6,13 @@ namespace Paddi.DemoUsages.ApiDemo.Controllers;
 public class NotificationController : ControllerBase
 {
     private readonly IBackgroundJobClient _bgClient;
-    private readonly ILogger<NotificationController> _logger;
 
-    public NotificationController(IBackgroundJobClient bgClient, ILogger<NotificationController> logger)
-    {
-        _bgClient = bgClient;
-        _logger = logger;
-    }
+    public NotificationController(IBackgroundJobClient bgClient) => _bgClient = bgClient;
 
     [HttpPost]
     public ActionResult<ResultDto<long>> CreateNotificationAsync([FromBody] SimpleNotification notification, CancellationToken cancellationToken = default)
     {
-        _bgClient.Enqueue<IWeatherForecastService>(service => service.GetAllAsync(cancellationToken));
+        _bgClient.Enqueue<IDictService>(service => service.GetAsync(1, cancellationToken));
         return Ok(1);
     }
 
