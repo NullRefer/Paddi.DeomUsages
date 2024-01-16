@@ -1,11 +1,17 @@
-﻿using Moq;
-using Microsoft.Extensions.Logging;
-using MockQueryable.Moq;
+﻿using System.Linq.Expressions;
+
+using Bogus;
+
 using FluentAssertions;
-using System.Linq.Expressions;
+
+using Microsoft.Extensions.Logging;
+
+using MockQueryable.Moq;
+
+using Moq;
+
 using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
 using Paddi.DemoUsages.ApiDemo.Repository;
-using Bogus;
 
 namespace Paddi.DemoUsages.ApiDemo.Services.Tests
 {
