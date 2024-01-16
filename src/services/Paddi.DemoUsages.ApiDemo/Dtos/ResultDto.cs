@@ -15,8 +15,15 @@ public class AppResult<T>
         Success = data is not null;
     }
 
+    protected AppResult(string msg)
+    {
+        Msg = msg;
+        Data = default;
+        Success = false;
+    }
+
     public static AppResult<T> Ok(T data, string msg = "Success") => new(msg, data);
-    public static AppResult<T> Ng(string msg = "Failed") => new(msg, default);
+    public static AppResult<T> Ng(string msg = "Failed") => new(msg);
 }
 
 public static class AppResult

@@ -5,117 +5,118 @@ using FluentAssertions;
 using System.Linq.Expressions;
 using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
 using Paddi.DemoUsages.ApiDemo.Repository;
+using Bogus;
 
 namespace Paddi.DemoUsages.ApiDemo.Services.Tests
 {
     public class DictRepoServiceTests
     {
         private readonly Mock<IRepository<Dict>> _repoMock;
-        private readonly Mock<ILogger<DictRepoService>> _logger;
+        private readonly Mock<ILogger<DictRepoService>> _loggerMock;
 
         public DictRepoServiceTests()
         {
             _repoMock = new Mock<IRepository<Dict>>();
-            _logger = new Mock<ILogger<DictRepoService>>();
+            _loggerMock = new Mock<ILogger<DictRepoService>>();
         }
 
         [Fact]
-        public async Task CreateAsync_ThrowArgumentException_WhenInputKeyExists()
+        public async Task CreateAsync_ReturnNg_WhenKeyAlreadyExists()
         {
             // Arrange
-            var testSet = TestSet;
+            var testSet = Faker.Generate(10);
             var input = new DictDto
             {
-                Key = testSet[0].Key
+                Key = testSet[0].Key,
+                Value = testSet[0].Value
             };
-
-            Expression<Func<IRepository<Dict>, IQueryable<Dict>>> expression = repo => repo.Where(e => e.Key == input.Key);
-            _repoMock.Setup(expression).Returns(testSet.Where(e => e.Key == input.Key).BuildMock());
-
-            // Act
-            var sut = GetSut();
-
-            // Assert
-            await Assert.ThrowsAsync<ArgumentException>(() => sut.CreateAsync(input));
-        }
-
-        // [Fact()]
-        // public async Task GetAsync_ReturnNull_IdNotExists()
-        // {
-        //     // Arrange
-        //     long id = 2;
-        //     var testDataset = TestSet;
-        //     _repoMock.Setup(m => m.Where(e => e.Key.Contains(id.ToString()) && !e.IsDeleted)).Returns(testDataset.BuildMock());
-
-        //     // Act
-        //     var sut = GetSut();
-        //     var result = await sut.GetAsync(1);
-
-        //     // Assert
-        //     result.Should().NotBeNull();
-        //     _output.WriteLine(result!.ToString());
-        // }
-
-        [Fact]
-        public async Task GetCategoryAsync_ReturnNull_WhenNoMatch()
-        {
-            // Arrange
-            var testDataset = TestSet;
-            _repoMock.Setup(m => m.Where(e => e.Key == "Category" && !e.IsDeleted)).Returns(testDataset.BuildMock());
+            Expression<Func<IRepository<Dict>, IQueryable<Dict>>> expression = repo => repo.Where(e => e.Key == input.Key, It.IsAny<bool>());
+            _repoMock.Setup(expression).Returns(testSet.BuildMock());
 
             // Act
             var sut = GetSut();
-            var result = await sut.GetCategoryAsync("test1");
+            var result = await sut.CreateAsync(input);
 
             // Assert
-            result.Should().BeNull();
+            result.Success.Should().BeFalse();
+            result.Msg.Should().Be($"{input.Key} already exists");
+            _repoMock.Verify(expression, Times.Once);
         }
 
         [Fact]
-        public async Task GetCategoryAsync_ReturnNotNull_WhenMatch()
+        public async Task CreateAsync_ReturnOk_WhenKeyNotExists()
         {
             // Arrange
-            var testDataset = TestSet;
-            Expression<Func<IRepository<Dict>, IQueryable<Dict>>> expression = repo => repo.Where(e => e.Key == "Category" && !e.IsDeleted);
-            _repoMock.Setup(expression).Returns(testDataset.BuildMock());
+            var testSet = Faker.Generate(3);
+            var input = new DictDto
+            {
+                Key = string.Join(',', testSet.Select(e => e.Key)),
+                Value = "Any"
+            };
+            Expression<Func<IRepository<Dict>, IQueryable<Dict>>> anyExpr = repo => repo.Where(e => e.Key == input.Key, It.IsAny<bool>());
+            _repoMock.Setup(anyExpr).Returns(testSet.Where(t => t.Key == input.Key).BuildMock());
+
+            Expression<Func<IRepository<Dict>, Task<int>>> createExpr = repo => repo.CreateAsync(It.IsAny<Dict>(), It.IsAny<CancellationToken>());
+            _repoMock.Setup(createExpr).ReturnsAsync(1);
 
             // Act
             var sut = GetSut();
-            var result = await sut.GetCategoryAsync("test");
+            var result = await sut.CreateAsync(input);
 
             // Assert
-            result.Should().NotBeNull();
-            result!.Id.Should().Be(1);
-            result!.Key.Should().Be("11test33");
-            _repoMock.Verify(expression, Times.Once());
-
+            result.Success.Should().BeTrue();
+            result.Data.Should().NotBeNull();
+            result.Data!.Key.Should().Be(input.Key);
+            result.Data!.Value.Should().Be(input.Value);
+            _repoMock.Verify(anyExpr, Times.Once());
+            _repoMock.Verify(createExpr, Times.Once());
         }
 
-        private static List<Dict> TestSet => new()
+        [Fact]
+        public async Task DeleteAsync_ReturnNg_WhenIdNotExists()
         {
-            new()
-            {
-                Id = 1,
-                Key = "11test33",
-                Value = "test",
-                IsDeleted = false
-            },
-            new()
-            {
-                Id = 2,
-                Key = "te2st",
-                Value = "te2st",
-                IsDeleted = false
-            },
-            new()
-            {
-                Id = 3,
-                Key = "test",
-                Value = "te2st",
-                IsDeleted = true
-            }
-        };
+            // Arrange
+            var testSet = Faker.Generate(3);
+            var id = testSet.Max(t => t.Id) + 1;
+            _repoMock.Setup(e => e.GetAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((Dict?)null);
 
-        private DictRepoService GetSut() => new DictRepoService(_repoMock.Object, _logger.Object);
+            // Act
+            var sut = GetSut();
+            var result = await sut.DeleteAsync(id);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Msg.Should().Be($"Not found with id - {id}");
+            _repoMock.Verify(e => e.GetAsync(id, It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ReturnOk_WhenIdExists()
+        {
+            // Arrange
+            var testSet = Faker.Generate(3);
+            var id = testSet[0].Id;
+            _repoMock.Setup(e => e.GetAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(testSet[0]);
+            _repoMock.Setup(e => e.DeleteAsync(testSet[0], It.IsAny<CancellationToken>())).ReturnsAsync(1);
+
+            // Act
+            var sut = GetSut();
+            var result = await sut.DeleteAsync(id);
+
+            // Assert
+            result.Success.Should().BeTrue();
+            result.Data.Should().Be(1);
+            _repoMock.Verify(e => e.GetAsync(id, It.IsAny<CancellationToken>()), Times.Once());
+            _repoMock.Verify(e => e.DeleteAsync(testSet[0], It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+
+        private Faker<Dict> Faker => new Faker<Dict>()
+            .RuleFor(e => e.Id, f => f.IndexGlobal)
+            .RuleFor(e => e.Key, f => f.Random.String2(4))
+            .RuleFor(e => e.Value, f => f.Random.String2(8))
+            .RuleFor(e => e.IsDeleted, f => true);
+
+        private DictRepoService GetSut() => new DictRepoService(_repoMock.Object, _loggerMock.Object);
     }
 }
