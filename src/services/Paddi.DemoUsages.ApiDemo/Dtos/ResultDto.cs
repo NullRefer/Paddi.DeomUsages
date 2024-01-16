@@ -4,9 +4,9 @@ namespace Paddi.DemoUsages.ApiDemo.Dtos;
 
 public class AppResult<T>
 {
-    public string Msg { get; set; } = "Success";
-    public bool Success { get; set; }
-    public T? Data { get; set; }
+    public string Msg { get; init; }
+    public bool Success { get; init; }
+    public T? Data { get; init; }
 
     protected AppResult(string msg, T? data)
     {
@@ -17,6 +17,12 @@ public class AppResult<T>
 
     public static AppResult<T> Ok(T data, string msg = "Success") => new(msg, data);
     public static AppResult<T> Ng(string msg = "Failed") => new(msg, default);
+}
+
+public static class AppResult
+{
+    public static AppResult<T> Ok<T>(T data, string msg = "Success") => AppResult<T>.Ok(data, msg);
+    public static AppResult<string> Ng(string msg = "Failed") => AppResult<string>.Ng(msg);
 }
 
 public class ApiResultDto
@@ -31,14 +37,14 @@ public class ApiResultDto
     };
 }
 
-public class ResultDto<T> : ApiResultDto
+public class ApiResultDto<T> : ApiResultDto
 {
-    public ResultDto()
+    public ApiResultDto()
     {
 
     }
 
-    public ResultDto(T data)
+    public ApiResultDto(T data)
     {
         Code = 2000;
         Msg = "Success";
@@ -49,7 +55,7 @@ public class ResultDto<T> : ApiResultDto
     [JsonProperty(Order = 4)]
     public T? Data { get; set; }
 
-    public static new ResultDto<T> Fail(string msg) => new()
+    public static new ApiResultDto<T> Fail(string msg) => new()
     {
         Msg = msg
     };

@@ -3,14 +3,14 @@
 namespace Paddi.DemoUsages.ApiDemo.Controllers;
 
 [ApiController, Route("notifications")]
-public class NotificationController : ControllerBase
+public class NotificationController : DemoControllerBase
 {
     private readonly IBackgroundJobClient _bgClient;
 
     public NotificationController(IBackgroundJobClient bgClient) => _bgClient = bgClient;
 
     [HttpPost]
-    public ActionResult<ResultDto<long>> CreateNotificationAsync([FromBody] SimpleNotification notification, CancellationToken cancellationToken = default)
+    public ActionResult<ApiResultDto<long>> CreateNotificationAsync([FromBody] SimpleNotification notification, CancellationToken cancellationToken = default)
     {
         _bgClient.Enqueue<IDictService>(service => service.GetAsync(1, cancellationToken));
         return Ok(1);

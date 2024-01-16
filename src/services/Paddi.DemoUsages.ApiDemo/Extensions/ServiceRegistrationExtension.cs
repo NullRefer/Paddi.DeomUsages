@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Paddi.DemoUsages.ApiDemo.Cache;
 using Paddi.DemoUsages.ApiDemo.Entities;
+using Paddi.DemoUsages.ApiDemo.Repository;
 
 namespace Paddi.DemoUsages.ApiDemo.Extensions;
 
@@ -13,7 +14,7 @@ public static class ServiceRegistrationExtension
     {
         // register scoped services
         var assembly = Assembly.GetExecutingAssembly();
-        var typesToRegister = assembly.ExportedTypes.Where(t => t.IsInterface && t.IsAssignableTo(typeof(IAppService))).ToList();
+        var typesToRegister = assembly.ExportedTypes.Where(t => t.IsInterface && t.IsAssignableTo(typeof(IAppService)));
 
         foreach (var typeToRegister in typesToRegister)
         {
@@ -61,7 +62,14 @@ public static class ServiceRegistrationExtension
                    .EnableThreadSafetyChecks();
         });
 
-        services.AddScoped<IRepository<Dict>, Repository<Dict>>();
+        var entityTypes = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => !t.IsAbstract && t.IsAssignableTo(typeof(IPaddiEntity)));
+        foreach (var entityType in entityTypes)
+        {
+            var implementation = typeof(Repository<>).MakeGenericType(entityType);
+            var serviceType = typeof(IRepository<>).MakeGenericType(entityType);
+            services.AddScoped(serviceType, implementation);
+        }
+
         return services;
     }
 }

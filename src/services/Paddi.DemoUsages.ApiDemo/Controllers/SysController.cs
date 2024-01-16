@@ -4,27 +4,26 @@ using Paddi.DemoUsages.ApiDemo.Cache;
 
 namespace Paddi.DemoUsages.ApiDemo.Controllers;
 
-[ApiController]
-[Route("sys")]
-public class SysController : ControllerBase
+[ApiController, Route("sys")]
+public class SysController : DemoControllerBase
 {
     [HttpGet("redis-option")]
-    public ResultDto<RedisOption> GetRedisOption(IOptionsMonitor<RedisOption> option) => this.Result(option.CurrentValue);
+    public ActionResult<ApiResultDto<RedisOption>> GetRedisOption(IOptionsMonitor<RedisOption> option) => Result(option.CurrentValue);
 
     [HttpGet("cache")]
-    public async Task<ResultDto<string>> GetCacheValueAsync(string key, [FromServices] IRedisDbProvider redisDbProvider)
+    public async Task<ActionResult<ApiResultDto<string>>> GetCacheValueAsync(string key, [FromServices] IRedisDbProvider redisDbProvider)
     {
         var db = redisDbProvider.GetDatabase();
-        return this.Result((string?)await db.StringGetAsync(key) ?? "");
+        return Result((string?)await db.StringGetAsync(key) ?? "");
     }
 
     [HttpPost("cache")]
-    public async Task<ResultDto<bool>> SetCacheValueAsync(string key, string value, [FromServices] IRedisDbProvider redisDbProvider)
+    public async Task<ActionResult<ApiResultDto<bool>>> SetCacheValueAsync(string key, string value, [FromServices] IRedisDbProvider redisDbProvider)
     {
         var db = redisDbProvider.GetDatabase();
-        return this.Result(await db.StringSetAsync(key, value));
+        return Result(await db.StringSetAsync(key, value));
     }
 
     [HttpGet("config")]
-    public ResultDto<string> GetConfiguration(string key, [FromServices] IConfiguration configuration) => this.Result(configuration[key] ?? "");
+    public ActionResult<ApiResultDto<string>> GetConfiguration(string key, [FromServices] IConfiguration configuration) => Result(configuration[key] ?? "");
 }

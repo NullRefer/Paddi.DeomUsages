@@ -3,46 +3,25 @@
 namespace Paddi.DemoUsages.ApiDemo.Controllers;
 
 [ApiController, Route("dicts")]
-public class DictController : ControllerBase
+public class DictController : DemoControllerBase
 {
     private readonly IDictService _service;
 
     public DictController(IDictService service) => _service = service;
 
-    [HttpPost()]
-    public async Task<ActionResult<ResultDto<Dict>>> CreateAsync([FromBody] DictDto input, CancellationToken cancellationToken = default)
-    {
-        var result = await _service.CreateAsync(input, cancellationToken);
-        if (result != null) return this.Result(result);
-
-        return ResultDto<Dict>.Fail("Fails to create dict");
-    }
-
-    [HttpDelete("{id:long}")]
-    public async Task<ActionResult<ResultDto<long>>> DeleteAsync([FromRoute] long id, CancellationToken cancellationToken = default)
-    {
-        var result = await _service.DeleteAsync(id, cancellationToken);
-        return this.Result(result);
-    }
-
-    [HttpDelete("batch")]
-    public async Task<ActionResult<ResultDto<long>>> BatchDeleteAsync([FromBody] List<long> idList, CancellationToken cancellationToken = default)
-    {
-        var result = await _service.BatchDeleteAsync(idList, cancellationToken);
-        return this.Result(result);
-    }
+    [HttpPost]
+    public async Task<ActionResult<ApiResultDto<Dict?>>> CreateAsync([FromBody] DictDto input, CancellationToken cancellationToken = default)
+        => Result(await _service.CreateAsync(input, cancellationToken));
 
     [HttpPut("{id:long}")]
-    public async Task<ActionResult<ResultDto<Dict?>>> UpdateAsync([FromRoute] long id, [FromBody] DictDto input, CancellationToken cancellationToken = default)
-    {
-        var result = await _service.UpdateAsync(id, input, cancellationToken);
-
-        return this.Result(result);
-    }
+    public async Task<ActionResult<ApiResultDto<Dict?>>> UpdateAsync([FromRoute] long id, [FromBody] DictDto input, CancellationToken cancellationToken = default)
+        => Result(await _service.UpdateAsync(id, input, cancellationToken));
 
     [HttpGet("{id:long}")]
-    public async Task<ActionResult<ResultDto<Dict?>>> GetAsync([FromRoute] long id, CancellationToken cancellationToken = default)
-    {
-        return this.Result(await _service.GetAsync(id, cancellationToken));
-    }
+    public async Task<ActionResult<ApiResultDto<Dict?>>> GetAsync([FromRoute] long id, CancellationToken cancellationToken = default)
+        => Result(await _service.GetAsync(id, cancellationToken));
+
+    [HttpDelete("{id:long}")]
+    public async Task<ActionResult<ApiResultDto<int>>> DeleteAsync([FromRoute] long id, CancellationToken cancellationToken = default)
+        => Result(await _service.DeleteAsync(id, cancellationToken));
 }

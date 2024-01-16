@@ -1,10 +1,10 @@
 ﻿using Moq;
-using Paddi.DemoUsages.ApiDemo.Entities;
 using Microsoft.Extensions.Logging;
 using MockQueryable.Moq;
 using FluentAssertions;
 using System.Linq.Expressions;
 using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
+using Paddi.DemoUsages.ApiDemo.Repository;
 
 namespace Paddi.DemoUsages.ApiDemo.Services.Tests
 {

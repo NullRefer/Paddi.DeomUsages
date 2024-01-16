@@ -1,15 +1,20 @@
-﻿namespace Paddi.DemoUsages.ApiDemo.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+
+using Paddi.DemoUsages.ApiDemo.Entities;
+
+namespace Paddi.DemoUsages.ApiDemo.Repository;
 
 public interface IRepository { }
 
 public interface IRepository<T> : IRepository where T : class, IPaddiEntity
 {
-    Task<T?> GetByIdAsync(long id, CancellationToken cancellationToken = default);
+    Task<T?> GetAsync(long id, CancellationToken cancellationToken = default);
     Task<int> CreateAsync(T entity, CancellationToken cancellationToken = default);
     Task<int> UpdateAsync(T entity, CancellationToken cancellationToken = default);
+    Task<int> DeleteAsync(long id, CancellationToken cancellationToken = default);
     Task<int> DeleteAsync(T entity, CancellationToken cancellationToken = default);
     IQueryable<T> GetAll();
-    IQueryable<T> Where(Expression<Func<T, bool>> predicate);
+    IQueryable<T> Where(Expression<Func<T, bool>> predicate, bool tracking = false);
 }
 
 public class Repository<T> : IRepository<T> where T : class, IPaddiEntity
@@ -19,12 +24,6 @@ public class Repository<T> : IRepository<T> where T : class, IPaddiEntity
     public Repository(ApiDemoDbContext dbContext)
     {
         _dbContext = dbContext;
-    }
-
-    public async Task<T?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
-    {
-        var dbSet = _dbContext.Set<T>();
-        return await dbSet.FindAsync(id, cancellationToken);
     }
 
     public async Task<int> CreateAsync(T entity, CancellationToken cancellationToken = default)
@@ -41,6 +40,12 @@ public class Repository<T> : IRepository<T> where T : class, IPaddiEntity
         return _dbContext.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task<T?> GetAsync(long id, CancellationToken cancellationToken = default)
+    {
+        var dbSet = _dbContext.Set<T>();
+        return await dbSet.FindAsync(new object?[] { id }, cancellationToken);
+    }
+
     public Task<int> DeleteAsync(T entity, CancellationToken cancellationToken = default)
     {
         var dbSet = _dbContext.Set<T>();
@@ -48,7 +53,19 @@ public class Repository<T> : IRepository<T> where T : class, IPaddiEntity
         return _dbContext.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task<int> DeleteAsync(long id, CancellationToken cancellationToken = default)
+    {
+        var dbSet = _dbContext.Set<T>();
+        var entity = await dbSet.FindAsync(new object?[] { id }, cancellationToken: cancellationToken);
+        if (entity == null)
+        {
+            return -1;
+        }
+        dbSet.Remove(entity);
+        return await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
     public IQueryable<T> GetAll() => _dbContext.Set<T>().AsQueryable();
 
-    public IQueryable<T> Where(Expression<Func<T, bool>> predicate) => _dbContext.Set<T>().Where(predicate);
+    public IQueryable<T> Where(Expression<Func<T, bool>> predicate, bool tracking = false) => tracking ? _dbContext.Set<T>().Where(predicate) : _dbContext.Set<T>().Where(predicate).AsNoTracking();
 }
