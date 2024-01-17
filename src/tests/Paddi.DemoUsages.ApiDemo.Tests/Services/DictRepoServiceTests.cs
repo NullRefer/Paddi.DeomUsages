@@ -116,13 +116,98 @@ namespace Paddi.DemoUsages.ApiDemo.Services.Tests
             _repoMock.Verify(e => e.DeleteAsync(testSet[0], It.IsAny<CancellationToken>()), Times.Once());
         }
 
+        [Fact]
+        public async Task GetAsync_ReturnEntity_WhenIdExists()
+        {
+            // Arrange
+            var testSet = Faker.Generate(3);
+            var id = testSet[0].Id;
+            _repoMock.Setup(e => e.GetAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(testSet[0]);
 
-        private Faker<Dict> Faker => new Faker<Dict>()
+            // Act
+            var sut = GetSut();
+            var result = await sut.GetAsync(id);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Success.Should().BeTrue();
+            result.Data.Should().Be(testSet[0]);
+            _repoMock.Verify(e => e.GetAsync(id, It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Fact]
+        public async Task GetAsync_ReturnNull_WhenIdNotExists()
+        {
+            // Arrange
+            var testSet = Faker.Generate(3);
+            var id = testSet.Max(e => e.Id) + 1;
+            _repoMock.Setup(e => e.GetAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((Dict?)null);
+
+            // Act
+            var sut = GetSut();
+            var result = await sut.GetAsync(id);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Success.Should().BeFalse();
+            result.Data.Should().BeNull();
+            _repoMock.Verify(e => e.GetAsync(id, It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Fact]
+        public async Task UpdateAsync_ReturnFalse_WhenIdNotExists()
+        {
+            // Arrange
+            var testSet = Faker.Generate(3);
+            var id = testSet.Max(e => e.Id) + 1;
+            _repoMock.Setup(e => e.GetAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((Dict?)null);
+
+            // Act
+            var sut = GetSut();
+            var result = await sut.UpdateAsync(id, new());
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Msg.Should().Be($"Not found with id - {id}");
+            _repoMock.Verify(e => e.GetAsync(id, It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Theory]
+        [InlineData("Key1", "Value1")]
+        [InlineData("Key2", "Value2")]
+        public async Task UpdateAsync_ReturnEntity_WhenIdExists(string key, string value)
+        {
+            // Arrange
+            var testSet = Faker.Generate(3);
+            var entity = testSet[0];
+            var id = testSet[0].Id;
+            var input = new DictDto
+            {
+                Key = key,
+                Value = value
+            };
+            _repoMock.Setup(e => e.GetAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
+            _repoMock.Setup(e => e.UpdateAsync(entity, It.IsAny<CancellationToken>())).ReturnsAsync(1);
+
+            // Act
+            var sut = GetSut();
+            var result = await sut.UpdateAsync(id, input);
+
+            // Assert
+            result.Success.Should().BeTrue();
+            result.Data.Should().NotBeNull();
+            result.Data!.Key.Should().Be(key);
+            result.Data!.Value.Should().Be(value);
+            _repoMock.Verify(e => e.GetAsync(id, It.IsAny<CancellationToken>()), Times.Once());
+            _repoMock.Verify(e => e.UpdateAsync(entity, It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        private static Faker<Dict> Faker => new Faker<Dict>()
             .RuleFor(e => e.Id, f => f.IndexGlobal)
             .RuleFor(e => e.Key, f => f.Random.String2(4))
             .RuleFor(e => e.Value, f => f.Random.String2(8))
             .RuleFor(e => e.IsDeleted, f => true);
 
-        private DictRepoService GetSut() => new DictRepoService(_repoMock.Object, _loggerMock.Object);
+        private DictRepoService GetSut() => new(_repoMock.Object, _loggerMock.Object);
     }
 }
