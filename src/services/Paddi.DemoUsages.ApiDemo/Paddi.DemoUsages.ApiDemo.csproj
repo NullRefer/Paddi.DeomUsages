@@ -23,4 +23,8 @@
 	<PackageReference Include="StackExchange.Redis" Version="2.6.111" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="../tests/Paddi.DemoUsages.ApiDemo.IntegrationTests"/>
+  </ItemGroup>
+
 </Project>
