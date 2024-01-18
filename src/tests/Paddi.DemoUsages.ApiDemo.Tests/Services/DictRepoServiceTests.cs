@@ -13,7 +13,7 @@ using Moq;
 using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
 using Paddi.DemoUsages.ApiDemo.Repository;
 
-namespace Paddi.DemoUsages.ApiDemo.Services.Tests
+namespace Paddi.DemoUsages.ApiDemo.Services.UnitTests
 {
     public class DictRepoServiceTests
     {

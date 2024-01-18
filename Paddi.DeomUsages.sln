@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paddi.DemoUsages.Core", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2DF0594E-7530-43BB-8FAA-17A955BCBDCE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paddi.DemoUsages.ApiDemo.Tests", "src\tests\Paddi.DemoUsages.ApiDemo.Tests\Paddi.DemoUsages.ApiDemo.Tests.csproj", "{2CD63E7F-7945-40B7-AA86-20019918F57D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paddi.DemoUsages.ApiDemo.UnitTests", "src\tests\Paddi.DemoUsages.ApiDemo.Tests\Paddi.DemoUsages.ApiDemo.UnitTests.csproj", "{2CD63E7F-7945-40B7-AA86-20019918F57D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paddi.DemoUsages.WpfDemo", "src\services\Paddi.DemoUsages.WpfDemo\Paddi.DemoUsages.WpfDemo.csproj", "{B46BCE97-839D-469F-A97B-AB0EA4596407}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paddi.DemoUsages.WpfDemo", "src\services\Paddi.DemoUsages.WpfDemo\Paddi.DemoUsages.WpfDemo.csproj", "{B46BCE97-839D-469F-A97B-AB0EA4596407}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
