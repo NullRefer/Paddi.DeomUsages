@@ -1,5 +1,8 @@
 ﻿using System.Reflection;
 
+using Hangfire;
+using Hangfire.Redis.StackExchange;
+
 using Microsoft.EntityFrameworkCore;
 
 using Paddi.DemoUsages.ApiDemo.Cache;
@@ -8,7 +11,7 @@ using Paddi.DemoUsages.ApiDemo.Repository;
 
 namespace Paddi.DemoUsages.ApiDemo.Extensions;
 
-public static class ServiceRegistrationExtension
+internal static class ServiceRegistrationExtension
 {
     public static IServiceCollection AddPaddiAppServices(this IServiceCollection services)
     {
@@ -70,6 +73,17 @@ public static class ServiceRegistrationExtension
             services.AddScoped(serviceType, implementation);
         }
 
+        return services;
+    }
+
+    public static IServiceCollection AddPaddiHangfire(this IServiceCollection services, IConfiguration configuration)
+    {
+        var redisConnectionString = configuration["Redis:ConnectionString"];
+
+        services.AddHangfireServer().AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                                                                               .UseSimpleAssemblyNameTypeSerializer()
+                                                                               .UseRecommendedSerializerSettings()
+                                                                               .UseRedisStorage(redisConnectionString));
         return services;
     }
 }

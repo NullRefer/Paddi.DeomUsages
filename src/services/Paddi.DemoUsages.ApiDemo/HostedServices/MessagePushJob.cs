@@ -8,7 +8,7 @@ using StackExchange.Redis;
 
 namespace Paddi.DemoUsages.ApiDemo.HostedServices;
 
-public class MessagePushJob : BackgroundService
+internal class MessagePushJob : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IHubContext<ChatHub> _hubContext;

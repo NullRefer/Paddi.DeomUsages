@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using Paddi.DemoUsages.ApiDemo.Services.IServices;
-
 using Testcontainers.MySql;
 using Testcontainers.Redis;
 
@@ -54,6 +52,8 @@ public class ApiDemoWebApplicationFactory : WebApplicationFactory<Program>, IAsy
                 .EnableDetailedErrors()
                 .EnableSensitiveDataLogging();
             });
+
+            services.Configure<RedisOption>(option => option.ConnectionString = _redisContainer.GetConnectionString());
         });
 
         builder.UseEnvironment("integration-test");
@@ -61,13 +61,13 @@ public class ApiDemoWebApplicationFactory : WebApplicationFactory<Program>, IAsy
 
     public async Task InitializeAsync()
     {
-        await _dbContainer.StartAsync();
+        //await _dbContainer.StartAsync();
         await _redisContainer.StartAsync();
     }
 
     public async Task DisposeAsync()
     {
-        await _dbContainer.StopAsync();
+        //await _dbContainer.StopAsync();
         await _redisContainer.StopAsync();
     }
 }

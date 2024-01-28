@@ -1,9 +1,6 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 
-using Hangfire;
-using Hangfire.Redis.StackExchange;
-
 using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
 using Paddi.DemoUsages.ApiDemo.Hubs;
 using Paddi.DemoUsages.ApiDemo.Middlewares;
@@ -40,31 +37,25 @@ builder.Services.AddFluentValidationAutoValidation().AddValidatorsFromAssemblyCo
 builder.Services.AddPaddiAppServices()
                 .AddPaddiHostedServices()
                 .AddPaddiRedis(builder.Configuration)
-                .AddPaddiDbContext(builder.Configuration);
-
-builder.Services.AddHangfireServer()
-                .AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-                                                           .UseSimpleAssemblyNameTypeSerializer()
-                                                           .UseRecommendedSerializerSettings()
-                                                           .UseRedisStorage("redis"));
+                .AddPaddiDbContext(builder.Configuration)
+                .AddPaddiHangfire(builder.Configuration);
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker-compose"))
+string[] devEnvNames = ["Development", "docker-compose", "integration-test"];
+if (devEnvNames.Any(app.Environment.IsEnvironment))
 {
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
 
-app.UseHttpLogging();
-
 //app.UseApiDelayMiddleware();
 
 app.UseHttpsRedirection();
 
-app.UseHangfireDashboard();
+app.UsePaddiHangfire();
 
 app.UseAuthorization();
 

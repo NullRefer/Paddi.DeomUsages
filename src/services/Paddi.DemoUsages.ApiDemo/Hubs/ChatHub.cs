@@ -5,7 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Paddi.DemoUsages.ApiDemo.Hubs;
 
-public class ChatHub : Hub
+internal class ChatHub : Hub
 {
     private readonly IMemoryCache _cache;
     private readonly ILogger<ChatHub> _logger;
