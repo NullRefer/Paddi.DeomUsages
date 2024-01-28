@@ -36,16 +36,17 @@ builder.Services.AddFluentValidationAutoValidation().AddValidatorsFromAssemblyCo
         };
     };
 });
-builder.Services.AddHangfireServer()
-                .AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-                                                           .UseSimpleAssemblyNameTypeSerializer()
-                                                           .UseRecommendedSerializerSettings()
-                                                           .UseRedisStorage("localhost:16379"));
 
 builder.Services.AddPaddiAppServices()
                 .AddPaddiHostedServices()
                 .AddPaddiRedis(builder.Configuration)
                 .AddPaddiDbContext(builder.Configuration);
+
+builder.Services.AddHangfireServer()
+                .AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                                                           .UseSimpleAssemblyNameTypeSerializer()
+                                                           .UseRecommendedSerializerSettings()
+                                                           .UseRedisStorage("redis"));
 
 var app = builder.Build();
 
