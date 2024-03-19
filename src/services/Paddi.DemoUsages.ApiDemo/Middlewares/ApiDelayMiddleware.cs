@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Paddi.DemoUsages.ApiDemo.Middlewares;
 
-internal class ApiDelayMiddleware
+public class ApiDelayMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger<ApiDelayMiddleware> _logger;
@@ -27,7 +27,7 @@ internal class ApiDelayMiddleware
     }
 }
 
-internal static class ApiDelayMiddlewareExtension
+public static class ApiDelayMiddlewareExtension
 {
     public static IApplicationBuilder UseApiDelayMiddleware(this IApplicationBuilder builder) => builder.UseMiddleware<ApiDelayMiddleware>();
 }

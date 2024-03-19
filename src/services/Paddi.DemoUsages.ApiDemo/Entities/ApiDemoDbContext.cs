@@ -8,8 +8,13 @@ namespace Paddi.DemoUsages.ApiDemo;
 
 public class ApiDemoDbContext : DbContext
 {
-    public ApiDemoDbContext(DbContextOptions options) : base(options)
+    public ApiDemoDbContext(DbContextOptions<ApiDemoDbContext> options) : base(options)
     {
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

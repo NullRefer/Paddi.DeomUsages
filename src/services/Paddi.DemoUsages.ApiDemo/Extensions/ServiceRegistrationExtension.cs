@@ -11,7 +11,7 @@ using Paddi.DemoUsages.ApiDemo.Repository;
 
 namespace Paddi.DemoUsages.ApiDemo.Extensions;
 
-internal static class ServiceRegistrationExtension
+public static class ServiceRegistrationExtension
 {
     public static IServiceCollection AddPaddiAppServices(this IServiceCollection services)
     {

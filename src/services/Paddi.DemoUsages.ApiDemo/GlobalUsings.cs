@@ -1,7 +1,5 @@
 ﻿global using System.Linq.Expressions;
 
-global using Bogus;
-
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.RateLimiting;
 
