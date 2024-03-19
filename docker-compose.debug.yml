@@ -10,6 +10,8 @@ services:
       dockerfile: src/services/Paddi.DemoUsages.ApiDemo/Dockerfile
     ports:
       - 5580:80
+      - 5581:8080
+      - 5582:8081
     depends_on:
       - redis
       - mysql

@@ -1,24 +1,23 @@
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
 WORKDIR /app
-EXPOSE 80
-
-ENV ASPNETCORE_URLS=http://+:80
-
-# Creates a non-root user with an explicit UID and adds permission to access the /app folder
-# For more info, please refer to https://aka.ms/vscode-docker-dotnet-configure-containers
-RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
-USER appuser
+EXPOSE 8080
+EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/services/Paddi.DemoUsages.ApiDemo/Paddi.DemoUsages.ApiDemo.csproj", "src/services/Paddi.DemoUsages.ApiDemo/"]
-RUN dotnet restore "src/services/Paddi.DemoUsages.ApiDemo/Paddi.DemoUsages.ApiDemo.csproj"
+RUN dotnet restore "./src/services/Paddi.DemoUsages.ApiDemo/Paddi.DemoUsages.ApiDemo.csproj"
 COPY . .
 WORKDIR "/src/src/services/Paddi.DemoUsages.ApiDemo"
-RUN dotnet build "Paddi.DemoUsages.ApiDemo.csproj" -c Release -o /app/build
+RUN dotnet build "./Paddi.DemoUsages.ApiDemo.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Paddi.DemoUsages.ApiDemo.csproj" -c Release -o /app/publish /p:UseAppHost=false
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./Paddi.DemoUsages.ApiDemo.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
