@@ -5,6 +5,8 @@ using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
 using Paddi.DemoUsages.ApiDemo.Hubs;
 using Paddi.DemoUsages.ApiDemo.Middlewares;
 
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,6 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpLogging(c =>
+{
+    c.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.All;
+});
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddMemoryCache();
@@ -40,6 +46,11 @@ builder.Services.AddPaddiAppServices()
                 .AddPaddiDbContext(builder.Configuration)
                 .AddPaddiHangfire(builder.Configuration);
 
+
+builder.Host.UseSerilog((context, services, configuration) => configuration.ReadFrom.Configuration(context.Configuration)
+                                                                           .ReadFrom.Services(services)
+                                                                           .Enrich.FromLogContext());
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -52,6 +63,8 @@ if (devEnvNames.Any(app.Environment.IsEnvironment))
 }
 
 //app.UseApiDelayMiddleware();
+//app.UseSerilogRequestLogging();
+app.UseHttpLogging();
 
 app.UseHttpsRedirection();
 
