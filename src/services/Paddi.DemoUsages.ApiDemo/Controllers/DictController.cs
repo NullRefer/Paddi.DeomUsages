@@ -18,6 +18,7 @@ public class DictController : DemoControllerBase
         => Result(await _service.UpdateAsync(id, input, cancellationToken));
 
     [HttpGet("{id:long}")]
+    [ResponseCache(Duration = 5)]
     public async Task<ActionResult<ApiResultDto<Dict?>>> GetAsync([FromRoute] long id, CancellationToken cancellationToken = default)
         => Result(await _service.GetAsync(id, cancellationToken));
 

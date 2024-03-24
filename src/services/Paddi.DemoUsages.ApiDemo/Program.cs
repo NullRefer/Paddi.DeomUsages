@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddResponseCaching();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpLogging(c =>
@@ -27,13 +29,14 @@ builder.Services.AddFluentValidationAutoValidation().AddValidatorsFromAssemblyCo
     options.InvalidModelStateResponseFactory = context =>
     {
         var errors = string.Join(',', context.ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
-        return new JsonResult(new
+        var result = new
         {
             Code = 9997,
             Msg = errors,
             Success = false,
             Data = ""
-        })
+        };
+        return new JsonResult(result)
         {
             StatusCode = StatusCodes.Status200OK
         };
@@ -69,6 +72,7 @@ app.UseHttpsRedirection();
 
 app.UsePaddiHangfire();
 
+app.UseResponseCaching();
 app.UseAuthorization();
 
 app.MapControllers();
