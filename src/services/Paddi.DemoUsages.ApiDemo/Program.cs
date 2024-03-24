@@ -63,7 +63,6 @@ if (devEnvNames.Any(app.Environment.IsEnvironment))
 }
 
 //app.UseApiDelayMiddleware();
-//app.UseSerilogRequestLogging();
 app.UseHttpLogging();
 
 app.UseHttpsRedirection();

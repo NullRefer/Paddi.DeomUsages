@@ -8,7 +8,7 @@ using StackExchange.Redis;
 
 namespace Paddi.DemoUsages.ApiDemo.HostedServices;
 
-public class MessagePushJob : BackgroundService
+public partial class MessagePushJob : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IHubContext<ChatHub> _hubContext;
@@ -82,7 +82,7 @@ public class MessagePushJob : BackgroundService
             }
             catch (Exception exc)
             {
-                _logger.LogError(exc, "Error while pushing {ChannelName}", channelName);
+                LogChannelError(exc, channelName);
             }
             finally
             {
@@ -90,4 +90,7 @@ public class MessagePushJob : BackgroundService
             }
         }
     }
+
+    [LoggerMessage(EventId = 0, Level = LogLevel.Error, Message = "Error while pushing {ChannelName}")]
+    public partial void LogChannelError(Exception exc, string channelName);
 }
