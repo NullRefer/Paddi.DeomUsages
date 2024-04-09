@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Paddi.DemoUsages.ApiDemo.Dtos.Dict;
+namespace Paddi.DemoUsages.ApiDemo.Dtos;
 
 public class DictDto
 {

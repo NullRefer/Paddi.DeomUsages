@@ -1,6 +1,4 @@
-﻿using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
-
-namespace Paddi.DemoUsages.ApiDemo.Controllers;
+﻿namespace Paddi.DemoUsages.ApiDemo.Controllers;
 
 [ApiController, Route("dicts")]
 public class DictController : DemoControllerBase
@@ -19,7 +17,7 @@ public class DictController : DemoControllerBase
 
     [HttpGet("{id:long}")]
     [ResponseCache(Duration = 5)]
-    public async Task<ActionResult<ApiResultDto<Dict?>>> GetAsync([FromRoute] long id, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<ApiResultDto<DictDto?>>> GetAsync([FromRoute] long id, CancellationToken cancellationToken = default)
         => Result(await _service.GetAsync(id, cancellationToken));
 
     [HttpDelete("{id:long}")]

@@ -10,7 +10,7 @@ using MockQueryable.Moq;
 
 using Moq;
 
-using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
+using Paddi.DemoUsages.ApiDemo.Dtos;
 using Paddi.DemoUsages.ApiDemo.Repository;
 
 namespace Paddi.DemoUsages.ApiDemo.Services.UnitTests

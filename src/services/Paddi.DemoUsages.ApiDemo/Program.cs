@@ -1,7 +1,6 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 
-using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
 using Paddi.DemoUsages.ApiDemo.Hubs;
 using Paddi.DemoUsages.ApiDemo.Middlewares;
 
@@ -47,7 +46,8 @@ builder.Services.AddPaddiAppServices()
                 .AddPaddiHostedServices()
                 .AddPaddiRedis(builder.Configuration)
                 .AddPaddiDbContext(builder.Configuration)
-                .AddPaddiHangfire(builder.Configuration);
+                .AddPaddiHangfire(builder.Configuration)
+                .AddMapper();
 
 
 builder.Host.UseSerilog((context, services, configuration) => configuration.ReadFrom.Configuration(context.Configuration)

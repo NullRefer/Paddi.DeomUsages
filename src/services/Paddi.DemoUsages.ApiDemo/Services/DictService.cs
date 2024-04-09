@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
-
 namespace Paddi.DemoUsages.ApiDemo.Services;
 
 public class DictService

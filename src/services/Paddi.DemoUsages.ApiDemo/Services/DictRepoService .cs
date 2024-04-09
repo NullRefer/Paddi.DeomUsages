@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
 
-using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
+using Microsoft.EntityFrameworkCore;
+
 using Paddi.DemoUsages.ApiDemo.Repository;
 
 namespace Paddi.DemoUsages.ApiDemo.Services;
@@ -8,11 +9,13 @@ namespace Paddi.DemoUsages.ApiDemo.Services;
 public class DictRepoService : IDictService
 {
     private readonly IRepository<Dict> _repo;
+    private readonly IMapper _mapper;
     private readonly ILogger<DictRepoService> _logger;
 
-    public DictRepoService(IRepository<Dict> repo, ILogger<DictRepoService> logger)
+    public DictRepoService(IRepository<Dict> repo, IMapper mapper, ILogger<DictRepoService> logger)
     {
         _repo = repo;
+        _mapper = mapper;
         _logger = logger;
     }
 
@@ -46,10 +49,10 @@ public class DictRepoService : IDictService
         return AppResult.Ok(result);
     }
 
-    public async Task<AppResult<Dict?>> GetAsync(long id, CancellationToken cancellationToken = default)
+    public async Task<AppResult<DictDto?>> GetAsync(long id, CancellationToken cancellationToken = default)
     {
         var data = await _repo.GetAsync(id, cancellationToken);
-        return AppResult<Dict?>.Ok(data);
+        return AppResult<DictDto?>.Ok(_mapper.Map<DictDto>(data));
     }
 
     public async Task<AppResult<Dict?>> UpdateAsync(long id, DictDto input, CancellationToken cancellationToken = default)

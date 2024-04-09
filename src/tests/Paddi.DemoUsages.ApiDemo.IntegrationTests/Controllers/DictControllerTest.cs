@@ -1,6 +1,4 @@
-﻿using Paddi.DemoUsages.ApiDemo.Dtos.Dict;
-
-namespace Paddi.DemoUsages.ApiDemo.IntegrationTests.Controllers;
+﻿namespace Paddi.DemoUsages.ApiDemo.IntegrationTests.Controllers;
 
 public class DictControllerTest : IClassFixture<ApiDemoWebApplicationFactory>
 {

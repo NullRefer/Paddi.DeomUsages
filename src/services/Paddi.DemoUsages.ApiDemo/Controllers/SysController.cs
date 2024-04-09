@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 
-using Paddi.DemoUsages.ApiDemo.Cache;
+using StackExchange.Redis;
 
 namespace Paddi.DemoUsages.ApiDemo.Controllers;
 
@@ -11,17 +11,16 @@ public class SysController : DemoControllerBase
     public ActionResult<ApiResultDto<RedisOption>> GetRedisOption(IOptionsMonitor<RedisOption> option) => Result(option.CurrentValue);
 
     [HttpGet("cache")]
-    public async Task<ActionResult<ApiResultDto<string>>> GetCacheValueAsync(string key, [FromServices] IRedisDbProvider redisDbProvider)
+    public async Task<ActionResult<ApiResultDto<string>>> GetCacheValueAsync(string key, [FromServices] IDatabase redis)
     {
-        var db = redisDbProvider.GetDatabase();
-        return Result((string?)await db.StringGetAsync(key) ?? "");
+        var result = (string?)await redis.StringGetAsync(key);
+        return Result(result ?? "");
     }
 
     [HttpPost("cache")]
-    public async Task<ActionResult<ApiResultDto<bool>>> SetCacheValueAsync(string key, string value, [FromServices] IRedisDbProvider redisDbProvider)
+    public async Task<ActionResult<ApiResultDto<bool>>> SetCacheValueAsync(string key, string value, [FromServices] IDatabase db)
     {
-        var db = redisDbProvider.GetDatabase();
-        return Result(await db.StringSetAsync(key, value));
+        return Result(await db.StringSetAsync(key, value, TimeSpan.FromHours(1)));
     }
 
     [HttpGet("config")]
